@@ -1,0 +1,27 @@
+config {
+  type: "incremental",
+  dependencies:["AZZ_PRODUCTS"],
+  schema: "PRESENTATION_DATAFORM",
+  name: "DIM_PRODUCTOS",
+  uniqueKey: ["CODIGO_PRODUCTO"],
+  description: "Tabla maestra productos",
+  tags: ["DIM"],
+  bigquery: {
+    clusterBy: ["CODIGO_PRODUCTO", "NOMBRE_PRODUCTO"]
+  },
+  columns: {
+    CODIGO_PRODUCTO: "Código interno del producto",
+    NOMBRE_PRODUCTO: "Nombre del producto",
+    ID_CATEGORIA: "Identificador de la categoría",
+    PRECIO_UNITARIO: "Precio unitario del producto",
+    FEECHA_CARGUE_BQ: "Fecha en la que se acutializo el registro en BigQuery",
+  }
+}
+
+SELECT 
+    IDProducto AS CODIGO_PRODUCTO,
+    NombreProducto AS NOMBRE_PRODUCTO,
+    IDSubCategoria AS ID_CATEGORIA,
+    PrecioUnitario AS PRECIO_UNITARIO,
+    CURRENT_DATETIME('America/Bogota') AS FEECHA_CARGUE_BQ
+FROM RAW_DATAFORM.AZZ_PRODUCTS 
