@@ -13,7 +13,7 @@ config {
         "FECHA_TRANSACCION >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)"
   },
   columns: {
-    FECHA_TRANSACCION: "Fecha de la transacción",
+    FECHA_TRANSACCION: "Fecha de la transacción AA",
     CODIGO_FACTURA: "Identificador de la factura",
     CODIGO_CLIENTE: "identificador del cliente",
     NOMBRE_CLIENTE: "Nombre del Cliente",
