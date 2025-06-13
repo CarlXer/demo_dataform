@@ -1,0 +1,12 @@
+config { type: "assertion" }
+
+SELECT
+  *
+FROM (
+  SELECT
+    IDCliente,
+    COUNT(1) AS index_row_count
+  FROM `xertica-delivery-data-service.RAW_DATAFORM.AZZ_CUSTOMERS`
+  GROUP BY IDCliente
+  ) AS data
+WHERE index_row_count > 1

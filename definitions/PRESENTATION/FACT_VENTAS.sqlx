@@ -1,7 +1,7 @@
 config {
   type: "incremental",
   schema: "PRESENTATION_DATAFORM",
-  dependencies:["DIM_CLIENTES","DIM_PRODUCTOS"],
+  dependencies:["DIM_CLIENTES","DIM_PRODUCTOS","PRESENTATION_DATAFORM_DIM_CLIENTES_assertions_uniqueKey_0"],
   name: "FACT_VENTAS",
   uniqueKey: ["CODIGO_FACTURA"],
   description: "Tabla de ventas del marketplace",

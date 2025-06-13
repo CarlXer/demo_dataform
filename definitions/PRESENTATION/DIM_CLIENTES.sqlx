@@ -1,6 +1,6 @@
 config {
   type: "incremental",
-  dependencies:["DIM_GEOGRAFIA"],
+  dependencies:["DIM_GEOGRAFIA","AZZ_CUSTOMERS","AZZ_CUSTOMERS_UNIQUEKEY"],
   assertions: {
     uniqueKey: ["CODIGO_CLIENTE"]
   },
