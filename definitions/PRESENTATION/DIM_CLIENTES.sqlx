@@ -14,7 +14,7 @@ config {
     partitionBy: "DATE(FECHA_CARGUE_BQ)",
   },
   columns: {
-    CODIGO_CLIENTE: "Código Cliente",
+    CODIGO_CLIENTE: "Código Cliente TEST",
     NOMBRE_CLIENTE: "Nombre del Cliente",
     TIPO_NEGOCIO: "Tipo de Negocio",
     CODIGO_GEOGRAFIA: "Codigo Geografia",
