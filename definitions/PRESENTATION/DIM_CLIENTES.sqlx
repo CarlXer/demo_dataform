@@ -1,0 +1,31 @@
+config {
+  type: "incremental",
+  dependencies:["DIM_GEOGRAFIA"],
+  assertions: {
+    uniqueKey: ["CODIGO_CLIENTE"]
+  },
+  schema: "PRESENTATION_DATAFORM",
+  name: "DIM_CLIENTES",
+  uniqueKey: ["CODIGO_CLIENTE"],
+  description: "Tabla maestra Clientes",
+  tags: ["DIM"],
+  bigquery: {
+    clusterBy: ["CODIGO_CLIENTE", "TIPO_NEGOCIO", "CODIGO_GEOGRAFIA"],
+    partitionBy: "DATE(FECHA_CARGUE_BQ)",
+  },
+  columns: {
+    CODIGO_CLIENTE: "Código Cliente",
+    NOMBRE_CLIENTE: "Nombre del Cliente",
+    TIPO_NEGOCIO: "Tipo de Negocio",
+    CODIGO_GEOGRAFIA: "Codigo Geografia",
+    FECHA_CARGUE_BQ: "Fecha en la que se acutializo el registro en BigQuery",
+  }
+}
+
+SELECT 
+  IDCliente AS CODIGO_CLIENTE,
+  NombreCliente AS NOMBRE_CLIENTE,
+  TipodeNegocio AS TIPO_NEGOCIO,
+  IDGeografia AS CODIGO_GEOGRAFIA,
+  CURRENT_DATETIME('America/Bogota') AS FECHA_CARGUE_BQ
+FROM  RAW_DATAFORM.AZZ_CUSTOMERS

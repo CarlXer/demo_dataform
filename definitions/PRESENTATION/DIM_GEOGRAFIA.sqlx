@@ -1,0 +1,32 @@
+config {
+  type: "incremental",
+  //dependencies:["AZZ_SUBCATEGORY_PRODUCTS","AZZ_CATEGORY_PRODUCTS"],
+  schema: "PRESENTATION_DATAFORM",
+  name: "DIM_GEOGRAFIA",
+  uniqueKey: ["CODIGO_GEOGRAFIA","CODIGO_PAIS"],
+  description: "Tabla maestra geografica",
+  tags: ["DIM"],
+  bigquery: {
+    clusterBy: ["CODIGO_GEOGRAFIA", "CODIGO_POSTAL"],
+    partitionBy: "DATE(FECHA_CARGUE_BQ)",
+  },
+  columns: {
+    CODIGO_GEOGRAFIA: "Código interno de geografico",
+    NOMBRE_CIUDAD: "Nombre de la ciudad",
+    ESTADO_PROVINCIA: "Nombre del estado o provincia",
+    CODIGO_POSTAL: "Código postal",
+    NOMBRE_PAIS: "Nombre Pais",
+    FECHA_CARGUE_BQ: "Fecha en la que se acutializo el registro en BigQuery",
+  }
+}
+
+SELECT 
+  T1.IDGeografia AS CODIGO_GEOGRAFIA,
+  T1.NombreCiudad AS NOMBRE_CIUDAD,
+  T1.EstadoProvincia AS ESTADO_PROVINCIA,
+  T1.CodigoPostal AS CODIGO_POSTAL,
+  T1.IDPais AS CODIGO_PAIS,
+  T2.NombrePais AS NOMBRE_PAIS,
+  CURRENT_DATETIME('America/Bogota') AS FECHA_CARGUE_BQ
+FROM RAW_DATAFORM.AZZ_GEOGRAPHY T1
+LEFT JOIN RAW_DATAFORM.AZZ_COUNTRY T2 ON T1.IDPais = T2.IDPais

@@ -1,0 +1,60 @@
+config {
+  type: "incremental",
+  //dependencies:["FACT_VENTAS"],
+  schema: "CONSUMPTION_DATAFORM",
+  name: "OBT_VENTAS_MARKETPLACE",
+  uniqueKey: ["CODIGO_CLIENTE"],
+  description: "Tabla maestra Clientes",
+  tags: ["DIM"],
+  bigquery: {
+    partitionBy: "FECHA_TRANSACCION",
+    clusterBy: ["CODIGO_FACTURA","NUMERO_FACTURA", "CODIGO_CLIENTE","CODIGO_PRODUCTO"],
+    updatePartitionFilter:
+        "FECHA_TRANSACCION >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)"
+  },
+  columns: {
+    FECHA_TRANSACCION: "Fecha de la transacción",
+    CODIGO_FACTURA: "Identificador de la factura",
+    CODIGO_CLIENTE: "identificador del cliente",
+    NOMBRE_CLIENTE: "Nombre del Cliente",
+    TIPO_NEGOCIO: "Tipo de negocio del cliente",
+    CODIGO_GEOGRAFIA: "Codigo Geografia del cliente",
+    NOMBRE_PAIS: "Nombre Pais",
+    NOMBRE_CIUDAD: "Nombre Ciudad",
+    ESTADO_PROVINCIA: "Estado o provincia",
+    CODIGO_PRODUCTO: "Identificador del producto",
+    NOMBRE_CATEGORIA: "Nombre de la categoria de un producto",
+    PRECIO_UNITARIO: "Codigo Geografia",
+    NOMBRE_CATEGORIA: "Codigo Geografia",
+    NOMBRE_SUB_CATEGORIA: "Nombre de la subcategoria de un producto",
+    NUMERO_FACTURA: "Número de la factura",
+    UNIDADES: "Unidades vendidas",
+    PESOS: "Valor monetario de la factura",
+    FECHA_CARGUE_BQ: "Fecha en la que se acutializo el registro en BigQuery",
+  }
+}
+
+SELECT 
+  T1.FECHA_TRANSACCION,
+  T1.CODIGO_FACTURA,
+  T1.CODIGO_CLIENTE,
+  T2.NOMBRE_CLIENTE,
+  T2.TIPO_NEGOCIO,
+  T2.CODIGO_GEOGRAFIA,
+  T3.NOMBRE_PAIS,
+  T3.NOMBRE_CIUDAD,
+  T3.ESTADO_PROVINCIA,
+  T1.CODIGO_PRODUCTO,
+  T4.NOMBRE_PRODUCTO,
+  T4.PRECIO_UNITARIO,
+  T5.NOMBRE_CATEGORIA,
+  T5.NOMBRE_SUB_CATEGORIA,
+  T1.NUMERO_FACTURA,
+  T1.UNIDADES,
+  T1.PESOS
+FROM ${ref("FACT_VENTAS")} T1
+LEFT JOIN ${ref("DIM_CLIENTES")} T2 ON T1.CODIGO_CLIENTE = T2.CODIGO_CLIENTE
+LEFT JOIN ${ref("DIM_GEOGRAFIA")} T3 ON T2.CODIGO_GEOGRAFIA = T3.CODIGO_GEOGRAFIA
+LEFT JOIN ${ref("DIM_PRODUCTOS")} T4 ON T1.CODIGO_PRODUCTO = T4.CODIGO_PRODUCTO
+LEFT JOIN  ${ref("DIM_SEGMENTACION_PRODUCTOS")} T5 ON T4.ID_SUB_CATEGORIA = T5.CODIGO_SUB_CATEGORIA
+${when(incremental(), `WHERE FECHA_TRANSACCION > DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)`) }

@@ -1,0 +1,38 @@
+config {
+  type: "incremental",
+  schema: "PRESENTATION_DATAFORM",
+  dependencies:["DIM_CLIENTES","DIM_PRODUCTOS"],
+  name: "FACT_VENTAS",
+  uniqueKey: ["CODIGO_FACTURA"],
+  description: "Tabla de ventas del marketplace",
+  tags: ["FACT"],
+  bigquery: {
+    partitionBy: "FECHA_TRANSACCION",
+    clusterBy: ["CODIGO_FACTURA","NUMERO_FACTURA", "CODIGO_CLIENTE","CODIGO_PRODUCTO"],
+    updatePartitionFilter:
+        "FECHA_TRANSACCION >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)"
+  },
+  columns: {
+    FECHA_TRANSACCION: "Fecha de la transacción",
+    CODIGO_FACTURA: "Identificador de la factura",
+    CODIGO_CLIENTE: "identificador del cliente",
+    CODIGO_PRODUCTO: "Identificador del producto",
+    NUMERO_FACTURA: "Número de la factura",
+    UNIDADES: "Unidades vendidas",
+    PESOS: "Valor monetario de la factira",
+    FECHA_CARGUE_BQ: "Fecha en la que se acutializo el registro en BigQuery",
+  }
+}
+
+
+SELECT 
+  FECHA_TRANSACCION AS FECHA_TRANSACCION,
+  IDFactura AS CODIGO_FACTURA,
+  IDCliente AS CODIGO_CLIENTE,
+  IDProducto AS CODIGO_PRODUCTO,
+  NumFactura AS NUMERO_FACTURA,
+  Unidades AS UNIDADES,
+  Pesos AS PESOS,
+CURRENT_DATETIME('America/Bogota') AS FECHA_CARGUE_BQ
+FROM RAW_DATAFORM.AZZ_SALES
+${when(incremental(), `WHERE FECHA_TRANSACCION > DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)`) }
