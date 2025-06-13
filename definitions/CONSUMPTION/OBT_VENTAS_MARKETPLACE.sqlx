@@ -14,7 +14,7 @@ config {
   },
   columns: {
     FECHA_TRANSACCION: "Fecha de la transacción AA",
-    CODIGO_FACTURA: "Identificador de la factura",
+    CODIGO_FACTURA: "Identificador de la factura BB",
     CODIGO_CLIENTE: "identificador del cliente",
     NOMBRE_CLIENTE: "Nombre del Cliente",
     TIPO_NEGOCIO: "Tipo de negocio del cliente",
